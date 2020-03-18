@@ -81,3 +81,29 @@ def delete_users(data):
             'message': e
         }
         return response_object, Const.FAILURE_CODE
+
+
+def user_login(data):
+    for item in Users.objects(email=data['email']):
+        verify = verify_password(data['password'], item['password'].encode('utf-8'),  item['passwordSalt'])
+        print(verify)
+        if not verify:
+            response_object = {
+                'status': Const.FAIL,
+                'message': 'Incorrect username or password.'
+            }
+            return response_object, Const.FAILURE_CODE
+        token = generate_active_token(str(item['publicId']), item['role'])
+        response_object = {
+            'status': Const.SUCCESS,
+            'token': token,
+            'publicId': str(item['publicId']),
+            'role': item['role'],
+            'message': 'Successfully logged in.'
+        }
+        return response_object, Const.SUCCESS_CODE
+    response_object = {
+        'status': Const.FAIL,
+        'message': 'Incorrect username or password.'
+    }
+    return response_object, Const.FAILURE_CODE

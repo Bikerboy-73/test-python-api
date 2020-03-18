@@ -41,3 +41,8 @@ class UsersDto:
     UsersDelete = api.model('UsersDelete', {
         'publicId': fields.String()
     })
+
+    UserLogin = api.model('UserLogin', {
+        'email': fields.String(),
+        'password': fields.String()
+    })
